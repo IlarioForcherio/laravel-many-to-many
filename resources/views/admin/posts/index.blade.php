@@ -11,7 +11,7 @@
 </div>
 
 
-@foreach ($posts as $item)
+@foreach ($posts_index as $item)
 
 <div class="d-flex justify-content-center mt-4 text-center" >
    <div class="card" style="width: 18rem;">
@@ -19,10 +19,14 @@
     <div class="card-body">
       <h5 class="card-title">titolo:{{$item->title}}</h5>
       {{-- <p class="card-text">{{$item->id}}</p> --}}
-      <p class="card-text">{{$item->category['name']}}</p>
-      {{-- chiedere category--}}
+      <p class="card-text">categoria:{{$item->category['name']}}</p>
       <p class="card-text">category id {{$item->category_id}} </p>
       <p class="card-text">body:{{$item->body}}</p>
+      {{-- ciclo che entra dentro ogni post.tags e some elemento ci sara' l'oggetto tags da cui estraggo il name --}}
+      @foreach($item->tags as $elem  )
+      <p class="card-text">tags:{{$elem['name']}}</p>
+      @endforeach
+
       <a href="{{route('admin.posts.show', $item->id)}}" class="btn btn-primary ">Visualizza Post</a>
     </div>
   </div>
@@ -32,7 +36,7 @@
 {{-- link che fa funzionare il paginate --}}
 <div class="d-flex justify-content-center">
     <div>
-      {{ $posts->links() }}
+      {{ $posts_index->links() }}
     </div>
 
 </div>

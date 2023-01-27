@@ -36,13 +36,14 @@
         @endforeach
     </select>
 
+    {{-- aggiunta checkbox dei tags --}}
 <div>
     <label for="">Tags</label>
 
     @foreach($tags_create as $elem)
     <label for="">
-        //tags
-        <input type="checkbox" name="tags[]" value="{{$elem->id}}">
+{{-- in name='crea un array con all'interno gli id della tabella tags' --}}
+        <input type="checkbox" name="array_generato[]" value="{{$elem->id}}">
         {{$elem->name}}
     </label>
     @endforeach

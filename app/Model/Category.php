@@ -11,7 +11,7 @@ class Category extends Model
     //relazione con la tabella posts
     public function posts(){
         //relazione uno a molti
-        //piu' post associati
+        //hasMany-> ha  piu' post associati(modelli)
         return $this->hasMany('App\Model\Post');
     }
 }

@@ -16,16 +16,13 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('category')->paginate(3);
-
-
-        //categories->nome della tabella
+        $posts_index = Post::with('category','tags')->paginate(3);
 
         //$posts = Post::paginate(3);
         //con paginate crea delle pagine in caso in cui gli elementi siano tanti
         //funziona con il metodo links(), vedi index.blade.php
         //funziona solo importando l'ultima versione di bootstrap da cdn
-        return view('admin.posts.index',compact('posts') );    //compact('posts')
+        return view('admin.posts.index',compact('posts_index') );    //compact('posts')
     }
 
     /**
@@ -65,10 +62,10 @@ class PostsController extends Controller
        $new_post->fill($data);
        //salvare sempre
        $new_post->save();
-
-       if( array_key_exist('tags', $data)  ){
+       // l'array lo generi in create.blade
+       if( array_key_exists('array_generato', $data)  ){
         //tags() e' la function tags che c'e' nel modello Post
-         $new_post->tags()->sync( $data['tags'] );
+         $new_post->tags()->sync( $data['array_generato'] );
        }
 
        return redirect()->route('admin.posts.index');
@@ -121,8 +118,19 @@ class PostsController extends Controller
     {
         $data =  $request->all();
         $post_update = Post::findOrFail($id);
+
         //mi recupero l'id e con update() effettuo effettivamente la modifica
         $post_update->update($data);
+
+
+        if( array_key_exists('array_generato', $data)  ){
+            //tags() e' la function tags che c'e' nel modello Post
+             $post_update->tags()->sync( $data['array_generato'] );
+           }
+           else{
+            $post_update->tags()->sync([]);
+           }
+
 
         return redirect()->route('admin.posts.show', $post_update->id);
     }
@@ -137,7 +145,7 @@ class PostsController extends Controller
     {
         $post_destroy =  Post::findOrFail($id);
 
-
+        $post_destroy->tags()->sync([]);
 
         $post_destroy->delete();
         //mi recupero l'id e con delete() effettuo effettivamente la modifica

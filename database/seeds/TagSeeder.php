@@ -20,6 +20,7 @@ class TagSeeder extends Seeder
             'senza lattosio',
         ];
         foreach($tags as $elem){
+
             $new_tag = new Tag();
             $new_tag->name = $elem;
             $new_tag->save();
