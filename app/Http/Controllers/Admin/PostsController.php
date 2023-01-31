@@ -1,11 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Mail\SendNewMail;
 use  App\Model\Category;
 use  App\Model\Post;
 use  App\Model\Tag;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
+//mail
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 class PostsController extends Controller
 {
@@ -16,7 +22,8 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts_index = Post::with('category','tags')->paginate(3);
+
+        $posts_index = Post::with('category','tags')->orderBy('id','DESC')->paginate(100);
 
         //$posts = Post::paginate(3);
         //con paginate crea delle pagine in caso in cui gli elementi siano tanti
@@ -68,6 +75,10 @@ class PostsController extends Controller
          $new_post->tags()->sync( $data['array_generato'] );
        }
 
+       // invio mail di creazione post
+       $mail_store = new SendNewMail($new_post);
+       $user_email = Auth::user()->email;
+       Mail::to($user_email)->send($mail_store);
        return redirect()->route('admin.posts.index');
 
     }
